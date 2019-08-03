@@ -124,6 +124,7 @@
     <Compile Include="ConsoleLog.cs" />
     <Compile Include="HotKey.cs" />
     <Compile Include="PlugInManager.cs" />
+    <Compile Include="Plugins\BoosKeyPlugin.cs" />
     <Compile Include="Plugins\DevToolsPlugin.cs" />
     <Compile Include="Plugins\DisabledBackPlugin.cs" />
     <Compile Include="Plugins\IPlugin.cs" />
