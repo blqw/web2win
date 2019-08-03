@@ -10,7 +10,13 @@ namespace web2win.Plugins
 {
     class MenuPlugin : PluginBase, IContextMenuHandler
     {
-        public override void Configuration(Config config) => Enabled = config.DisableRightClick;
+        public bool EnabledHistory { get; private set; }
+
+        public override void Configuration(Config config)
+        {
+            Enabled = config.DisableRightClick;
+            EnabledHistory = !config.DisableHistory;
+        }
 
         void IContextMenuHandler.OnBeforeContextMenu(IWebBrowser chromiumWebBrowser, IBrowser browser, IFrame frame,
             IContextMenuParams parameters, IMenuModel model)
@@ -47,6 +53,14 @@ namespace web2win.Plugins
                             case MenuItemType.SubMenu:
                             default:
                                 break;
+                        }
+                        break;
+                    case CefMenuCommand.Back:
+                    case CefMenuCommand.Forward:
+                        if (EnabledHistory)
+                        {
+                            flag = true;
+                            continue;
                         }
                         break;
                     default:

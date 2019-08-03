@@ -29,7 +29,7 @@ namespace web2win
             => _dict.TryGetValue(key, out var obj) ? obj : null;
 
         public static Dictionary<string, PropertyInfo> Properties { get; } = typeof(Config).GetProperties().ToDictionary(x => x.Name, StringComparer.OrdinalIgnoreCase);
-        
+
         /// <summary>
         /// 初始页面
         /// </summary>
@@ -67,15 +67,18 @@ namespace web2win
         /// 初始Left
         /// </summary>
         public int? Left { get; set; }
-
+        /// <summary>
+        /// 窗口置顶
+        /// </summary>
+        public bool Topmost { get; set; }
         /// <summary>
         /// 禁用右键
         /// </summary>
-        public bool DisableRightClick { get; set; } = true;
+        public bool DisableRightClick { get; set; }
         /// <summary>
         /// 禁用历史
         /// </summary>
-        public bool DisableHistory { get; set; } = true;
+        public bool DisableHistory { get; set; }
         /// <summary>
         /// 标题
         /// </summary>
@@ -102,7 +105,6 @@ namespace web2win
         public string UrlFilter { get; set; }
 
         // 保持心跳
-        public bool Topmost { get; set; }
         // 贴边隐藏
 
         /// <summary>
