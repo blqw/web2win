@@ -43,8 +43,7 @@ namespace web2win
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
-                this.Close();
-                return;
+                Close();
             }
         }
     }

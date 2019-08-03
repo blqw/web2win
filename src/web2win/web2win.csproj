@@ -127,6 +127,7 @@
     <Compile Include="Plugins\BoosKeyPlugin.cs" />
     <Compile Include="Plugins\DevToolsPlugin.cs" />
     <Compile Include="Plugins\DisabledBackPlugin.cs" />
+    <Compile Include="Plugins\HeartbeatPlugin.cs" />
     <Compile Include="Plugins\IPlugin.cs" />
     <Compile Include="Plugins\LaunchPlugin.cs" />
     <Compile Include="Plugins\LogPlugin.cs" />

@@ -10,7 +10,9 @@
   "enable_f12": true,
   "enable_tray": true,
   "minimize_to_tray": true,
+  "heartbeat_url": "https://crm-pre.fastfish.com/api/vp/VipCommand/1.0/delete?15558076590",
+  "heartbeat_interval": 5000,
   "boss_key": "alt+q",
-  "url": "https://www.baidu.com",
-  "url_filter": "^http[s]?://([^.]+[.])?(baidu[.]|sina[.])"
+  "url": "http://www.baidu.com",
+  //"url_filter": "^http[s]?://([^.]+[.])?(baidu[.]|sina[.])"
 }

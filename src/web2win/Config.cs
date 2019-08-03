@@ -104,8 +104,14 @@ namespace web2win
         /// </summary>
         public string UrlFilter { get; set; }
 
-        // 保持心跳
-        // 贴边隐藏
+        /// <summary>
+        /// 保持心跳
+        /// </summary>
+        public string HeartbeatUrl { get; set; }
+        /// <summary>
+        /// 心跳间隔 默认60000(1分钟)
+        /// </summary>
+        public int? HeartbeatInterval { get; set; }
 
         /// <summary>
         /// 关闭时保存窗口位置

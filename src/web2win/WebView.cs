@@ -47,7 +47,6 @@ namespace web2win
                 PersistSessionCookies = true,
                 Locale = "zh-CN",
                 LogSeverity = LogSeverity.Disable,
-
             };
             return settings;
         }
