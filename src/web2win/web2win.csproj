@@ -133,6 +133,7 @@
     <Compile Include="Plugins\MenuPlugin.cs" />
     <Compile Include="Plugins\NotifyIconPlugin.cs" />
     <Compile Include="Plugins\PluginBase.cs" />
+    <Compile Include="Plugins\UrlFilterPlugin.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="StartupCommands.cs" />
     <Compile Include="WebView.cs" />

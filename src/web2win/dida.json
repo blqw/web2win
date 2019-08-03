@@ -4,11 +4,12 @@
   "width": 1200,
   "min_width": 350,
   "min_height": 800,
-  //"disable_history": false
+  "disable_history": false,
   //"browser_loglevel": "error",
   "enable_f12": true,
   "enable_tray": true,
   "minimize_to_tray": true,
   "boss_key": "alt+q",
-  "url": "https://www.baidu.com"
+  "url": "https://www.baidu.com",
+  "url_filter": "^http[s]?://([^.]+[.])?(baidu[.]|sina[.])"
 }

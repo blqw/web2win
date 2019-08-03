@@ -14,12 +14,12 @@ namespace web2win.Plugins
     {
         public override void Configuration(Config config) => Enabled = config.EnableF12;
 
-        public override void OnWindowLoad(Window window, ChromiumWebBrowser browser) 
+        public override void OnWindowLoad(Window window, ChromiumWebBrowser browser)
             => window.KeyDown += (_, e) =>
             {
                 if (e.Key == Key.F12)
                 {
-                    browser.ShowDevTools();
+                    browser.Dispatcher?.Invoke(() => browser.ShowDevTools());
                     e.Handled = true;
                 }
             };

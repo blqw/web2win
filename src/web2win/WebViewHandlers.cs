@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Security.Cryptography.X509Certificates;
 using CefSharp;
 using CefSharp.Handler;
@@ -55,7 +56,14 @@ namespace web2win
 
         IRequestHandler request = new DefaultRequestHandler();
 
-        public bool OnBeforeBrowse(IWebBrowser chromiumWebBrowser, IBrowser browser, IFrame frame, IRequest request, bool userGesture, bool isRedirect) => this.request.OnBeforeBrowse(chromiumWebBrowser, browser, frame, request, userGesture, isRedirect);
+        public bool OnBeforeBrowse(IWebBrowser chromiumWebBrowser, IBrowser browser, IFrame frame, IRequest request, bool userGesture, bool isRedirect)
+        {
+            //this.request.OnBeforeBrowse(chromiumWebBrowser, browser, frame, request, userGesture, isRedirect);
+            var b = false;
+            PlugInManager.Execute<IRequestHandler>(x => b |= x.OnBeforeBrowse(chromiumWebBrowser, browser, frame, request, userGesture, isRedirect));
+            return b;
+        }
+
         public bool OnOpenUrlFromTab(IWebBrowser chromiumWebBrowser, IBrowser browser, IFrame frame, string targetUrl, WindowOpenDisposition targetDisposition, bool userGesture) => request.OnOpenUrlFromTab(chromiumWebBrowser, browser, frame, targetUrl, targetDisposition, userGesture);
         public bool OnCertificateError(IWebBrowser chromiumWebBrowser, IBrowser browser, CefErrorCode errorCode, string requestUrl, ISslInfo sslInfo, IRequestCallback callback) => request.OnCertificateError(chromiumWebBrowser, browser, errorCode, requestUrl, sslInfo, callback);
         public void OnPluginCrashed(IWebBrowser chromiumWebBrowser, IBrowser browser, string pluginPath) => request.OnPluginCrashed(chromiumWebBrowser, browser, pluginPath);
@@ -72,7 +80,7 @@ namespace web2win
         public bool OnResourceResponse(IWebBrowser chromiumWebBrowser, IBrowser browser, IFrame frame, IRequest request, IResponse response) => this.request.OnResourceResponse(chromiumWebBrowser, browser, frame, request, response);
         public IResponseFilter GetResourceResponseFilter(IWebBrowser chromiumWebBrowser, IBrowser browser, IFrame frame, IRequest request, IResponse response) => this.request.GetResourceResponseFilter(chromiumWebBrowser, browser, frame, request, response);
         public void OnResourceLoadComplete(IWebBrowser chromiumWebBrowser, IBrowser browser, IFrame frame, IRequest request,
-            IResponse response, UrlRequestStatus status, long receivedContentLength) 
+            IResponse response, UrlRequestStatus status, long receivedContentLength)
             => this.request.OnResourceLoadComplete(chromiumWebBrowser, browser, frame, request, response, status, receivedContentLength);
     }
 }

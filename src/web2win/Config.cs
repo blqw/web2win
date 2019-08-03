@@ -29,10 +29,45 @@ namespace web2win
             => _dict.TryGetValue(key, out var obj) ? obj : null;
 
         public static Dictionary<string, PropertyInfo> Properties { get; } = typeof(Config).GetProperties().ToDictionary(x => x.Name, StringComparer.OrdinalIgnoreCase);
+        
         /// <summary>
         /// 初始页面
         /// </summary>
         public string Url { get; set; }
+        /// <summary>
+        /// 最大宽度
+        /// </summary>
+        public int? MaxWidth { get; set; }
+        /// <summary>
+        /// 最小宽度
+        /// </summary>
+        public int? MinWidth { get; set; }
+        /// <summary>
+        /// 最大高度
+        /// </summary>
+        public int? MaxHeight { get; set; }
+        /// <summary>
+        /// 最小高度
+        /// </summary>
+        public int? MinHeight { get; set; }
+        /// <summary>
+        /// 初始宽度
+        /// </summary>
+        public int? Width { get; set; }
+        /// <summary>
+        /// 初始高度
+        /// </summary>
+        public int? Height { get; set; }
+
+        /// <summary>
+        /// 初始Top
+        /// </summary>
+        public int? Top { get; set; }
+        /// <summary>
+        /// 初始Left
+        /// </summary>
+        public int? Left { get; set; }
+
         /// <summary>
         /// 禁用右键
         /// </summary>
@@ -61,27 +96,14 @@ namespace web2win
         // 启用老板键
         public string BossKey { get; set; }
 
-        // 限制域名
+        /// <summary>
+        /// URL过滤
+        /// </summary>
+        public string UrlFilter { get; set; }
+
         // 保持心跳
         public bool Topmost { get; set; }
         // 贴边隐藏
-        // 最大宽度
-        public int? MaxWidth { get; set; }
-        // 最小宽度
-        public int? MinWidth { get; set; }
-        // 最大高度
-        public int? MaxHeight { get; set; }
-        // 最小高度
-        public int? MinHeight { get; set; }
-        // 初始宽度
-        public int? Width { get; set; }
-        // 初始高度
-        public int? Height { get; set; }
-
-        // 初始Top
-        public int? Top { get; set; }
-        // 初始Left
-        public int? Left { get; set; }
 
         /// <summary>
         /// 关闭时保存窗口位置
