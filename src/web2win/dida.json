@@ -5,5 +5,7 @@
   "min_width": 350,
   "min_height": 800,
   //"disable_history": false
+  //"browser_loglevel": "error",
+  "enable_f12": true,
   "url": "https://www.baidu.com"
 }

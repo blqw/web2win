@@ -82,7 +82,7 @@ namespace web2win
                 //DragHandler = new DragHandler(),
                 RequestHandler = handler,
             };
-            Browser.ConsoleMessage += (_, x) => Console.WriteLine($"Cef.Browser >> [{x.Level}] {x.Source},{x.Line} {x.Message}");
+
             var semaphore = new SemaphoreSlim(0, 1);
 
             Browser.FrameLoadStart += FrameLoadStart;

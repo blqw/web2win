@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
+using System.Diagnostics;
 using System.IO;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace web2win
@@ -12,6 +14,17 @@ namespace web2win
         {
             ConsoleLog.Enable();
 
+
+            Console.WriteLine("程序启动");
+
+
+            if (StartupCommands.Console)
+            {
+                Task.Delay(2000).ContinueWith(t =>
+                {
+                    //ConsoleHandler.Show();
+                });
+            }
             var app = new App();
             if (StartupCommands.Config == null)
             {
@@ -25,5 +38,6 @@ namespace web2win
                 }
             }
         }
+
     }
 }

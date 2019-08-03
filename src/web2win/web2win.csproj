@@ -121,6 +121,7 @@
     <Compile Include="ConsoleHandler.cs" />
     <Compile Include="ConsoleLog.cs" />
     <Compile Include="PlugInManager.cs" />
+    <Compile Include="Plugins\DevToolsPlugin.cs" />
     <Compile Include="Plugins\DisabledBackPlugin.cs" />
     <Compile Include="Plugins\IPlugin.cs" />
     <Compile Include="Plugins\LaunchPlugin.cs" />
