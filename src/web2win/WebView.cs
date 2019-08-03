@@ -16,12 +16,16 @@ namespace web2win
     {
         public static IDisposable UseCef()
         {
-            var scan = Task.Run(PlugInContainer.Scan); //异步扫描
+            if (Cef.IsInitialized)
+            {
+                return null;
+            }
+            var scan = Task.Run(PlugInManager.Scan); //异步扫描
             var settings = CreateCefSettings();
-            RegisterScheme(settings);
             SupportAnyCpu(settings);
             Cef.Initialize(settings);
             scan.Wait();
+            Cef.AddDisposable(scan.Result);
             return new Disposable();
         }
 
@@ -34,7 +38,7 @@ namespace web2win
         {
             var path = Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName);
             var config = Path.GetFileNameWithoutExtension(StartupCommands.Config);
-            return new CefSettings
+            var settings = new CefSettings
             {
                 CachePath = Path.Combine(path, "Browser", config, "Cache"),
                 LogFile = Path.Combine(path, "Browser", config, "Logs"),
@@ -42,7 +46,10 @@ namespace web2win
                 AcceptLanguageList = "zh,zh-cn,zh-tw;q=0.9",
                 PersistSessionCookies = true,
                 Locale = "zh-CN",
+                LogSeverity = LogSeverity.Disable,
+
             };
+            return settings;
         }
 
         private static void SupportAnyCpu(AbstractCefSettings settings)
@@ -56,28 +63,14 @@ namespace web2win
             }
         }
 
-        private static void RegisterScheme(AbstractCefSettings settings)
-        {
-            var scheme = new CefCustomScheme
-            {
-                SchemeName = "web2app",
-                SchemeHandlerFactory = new WebViewHandlers()
-            };
-            settings.RegisterScheme(scheme);
-        }
-
         //=============================================================================================
 
         public ChromiumWebBrowser Browser { get; private set; }
 
         private Task CreateBrowser()
         {
-            if (CefSharpSettings.ShutdownOnExit)
-            {
-                Application.Current.Exit += OnApplicationExit;
-            }
             var handler = new WebViewHandlers();
-            const string indexPage = "web2app://start/";
+            const string indexPage = "about:blank";
             Browser = new ChromiumWebBrowser(indexPage)
             {
                 HorizontalAlignment = HorizontalAlignment.Stretch,
@@ -89,7 +82,7 @@ namespace web2win
                 //DragHandler = new DragHandler(),
                 RequestHandler = handler,
             };
-
+            Browser.ConsoleMessage += (_, x) => Console.WriteLine($"Cef.Browser >> [{x.Level}] {x.Source},{x.Line} {x.Message}");
             var semaphore = new SemaphoreSlim(0, 1);
 
             Browser.FrameLoadStart += FrameLoadStart;
@@ -98,16 +91,15 @@ namespace web2win
 
             void FrameLoadStart(object sender, FrameLoadStartEventArgs e)
             {
-                if (e.Frame.Url == indexPage)
+                Browser.Dispatcher?.Invoke(() => Browser.Title = "");
+                using (semaphore)
                 {
-                    using (semaphore)
-                    {
-                        semaphore.Release();
-                        Browser.FrameLoadStart -= FrameLoadStart;
-                    }
+                    Browser.FrameLoadStart -= FrameLoadStart;
+                    semaphore.Release();
                 }
             }
         }
+
 
         public void Bind(Window window, string configJson)
         {
@@ -117,29 +109,25 @@ namespace web2win
                     var json = await Browser.EvaluateScriptAsync("(function(){return " + configJson + ";})()");
                     if (!json.Success || !(json.Result is ExpandoObject obj))
                     {
-                        MessageBox.Show("配置文件格式错误:" + Environment.NewLine + configJson);
-                        window.Dispatcher.Invoke(window.Close);
+                        MessageBox.Show("配置文件格式错误:" + json.Message + Environment.NewLine + configJson);
+                        window.Dispatcher?.Invoke(window.Close);
                         return;
                     }
                     var config = new Config(obj);
-                    PlugInContainer.Configuration(config);
-                    PlugInContainer.Execute(x => x.OnWindowLoad(window, Browser));
+                    PlugInManager.Configuration(config);
+                    PlugInManager.Execute(x => x.OnWindowLoad(window, Browser));
                     Address = GetRealUrl(config.Url);
                 });
-
-
+            window.Closed += Window_Closed;
             ((IAddChild)window).AddChild(Browser);
         }
 
-        private void OnApplicationExit(object sender, ExitEventArgs e)
+        private void Window_Closed(object sender, EventArgs e)
         {
-            PlugInContainer.Execute<IPlugin>(x => x.OnApplicationExit(sender, e));
-
             foreach (var action in new Action[]{
                 () => Browser?.CloseDevTools(),
                 () => Browser?.GetBrowser().CloseBrowser(true),
                 () => Browser?.Dispose(),
-                //Cef.Shutdown,
             })
             {
                 try

@@ -1,9 +1,9 @@
 ﻿{
-  "url": "https://www.dida365.com/#q/all/today",
-  "title": "滴答清单",
+  //"title": "滴答清单",
   "height": 800,
   "width": 1200,
   "min_width": 350,
   "min_height": 800,
   //"disable_history": false
-}a
+  "url": "https://www.baidu.com"
+}

@@ -47,11 +47,5 @@ namespace web2win
                 return;
             }
         }
-
-        protected override void OnClosed(EventArgs e)
-        {
-            base.OnClosed(e);
-            Environment.Exit(0);
-        }
     }
 }

@@ -34,15 +34,12 @@ namespace web2win.Plugins
                         switch (model.GetTypeAt(i))
                         {
                             case MenuItemType.Separator:
-                                if (flag)
+                                if (flag && i != 0)
                                 {
                                     continue;
                                 }
-                                else
-                                {
-                                    flag = false;
-                                    break;
-                                }
+                                flag = false;
+                                break;
                             case MenuItemType.None:
                             case MenuItemType.Command:
                             case MenuItemType.Check:

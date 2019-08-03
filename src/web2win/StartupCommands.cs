@@ -51,5 +51,7 @@ namespace web2win
 
         [Short("c")]
         public static string Config { get; private set; }
+
+        public static bool Console { get; private set; }
     }
 }

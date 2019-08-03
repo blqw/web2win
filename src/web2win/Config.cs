@@ -85,7 +85,10 @@ namespace web2win
         /// </summary>
         public bool ClosedSaveLocation { get; set; }
 
-
+        /// <summary>
+        /// 浏览器日志级别
+        /// </summary>
+        public string BrowserLogLevel { get; set; }
 
 
 

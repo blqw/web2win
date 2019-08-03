@@ -12,7 +12,7 @@ namespace web2win
 
         void IContextMenuHandler.OnBeforeContextMenu(IWebBrowser chromiumWebBrowser, IBrowser browser,
             IFrame frame, IContextMenuParams parameters, IMenuModel model)
-            => PlugInContainer.Execute<IContextMenuHandler>(x => x.OnBeforeContextMenu(chromiumWebBrowser, browser, frame, parameters, model));
+            => PlugInManager.Execute<IContextMenuHandler>(x => x.OnBeforeContextMenu(chromiumWebBrowser, browser, frame, parameters, model));
 
         bool IContextMenuHandler.OnContextMenuCommand(IWebBrowser chromiumWebBrowser, IBrowser browser,
             IFrame frame, IContextMenuParams parameters, CefMenuCommand commandId, CefEventFlags eventFlags)
@@ -31,7 +31,7 @@ namespace web2win
             var a = noJavascriptAccess;
             var b = (IWebBrowser)null;
             var c = true;
-            PlugInContainer.Execute<ILifeSpanHandler>(x =>
+            PlugInManager.Execute<ILifeSpanHandler>(x =>
             {
                 c &= x.OnBeforePopup(chromiumWebBrowser, browser, frame, targetUrl, targetFrameName, targetDisposition,
                     userGesture, popupFeatures, windowInfo, browserSettings, ref a, out var b1);
@@ -44,14 +44,14 @@ namespace web2win
             return c;
         }
         void ILifeSpanHandler.OnAfterCreated(IWebBrowser chromiumWebBrowser, IBrowser browser)
-            => PlugInContainer.Execute<ILifeSpanHandler>(x => x.OnAfterCreated(chromiumWebBrowser, browser));
+            => PlugInManager.Execute<ILifeSpanHandler>(x => x.OnAfterCreated(chromiumWebBrowser, browser));
         bool ILifeSpanHandler.DoClose(IWebBrowser chromiumWebBrowser, IBrowser browser)
         {
-            PlugInContainer.Execute<ILifeSpanHandler>(x => x.DoClose(chromiumWebBrowser, browser));
+            PlugInManager.Execute<ILifeSpanHandler>(x => x.DoClose(chromiumWebBrowser, browser));
             return false;
         }
         void ILifeSpanHandler.OnBeforeClose(IWebBrowser chromiumWebBrowser, IBrowser browser)
-            => PlugInContainer.Execute<ILifeSpanHandler>(x => x.OnBeforeClose(chromiumWebBrowser, browser));
+            => PlugInManager.Execute<ILifeSpanHandler>(x => x.OnBeforeClose(chromiumWebBrowser, browser));
 
         IRequestHandler request = new DefaultRequestHandler();
 

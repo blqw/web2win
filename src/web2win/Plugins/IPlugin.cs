@@ -9,17 +9,26 @@ using System.Windows;
 
 namespace web2win.Plugins
 {
-    interface IPlugin
+    /// <summary>
+    /// 插件接口
+    /// </summary>
+    public interface IPlugin : IDisposable
     {
+        /// <summary>
+        /// 使用配置文件配置插件
+        /// </summary>
         void Configuration(Config config);
-
+        /// <summary>
+        /// 插件是否生效
+        /// </summary>
         bool Enabled { get; }
-
-        T GetComponent<T>()
-            where T : class;
-
-        void OnApplicationExit(object sender, ExitEventArgs e);
-
+        /// <summary>
+        /// 获取插件中特定的功能
+        /// </summary>
+        T GetFeature<T>() where T : class;
+        /// <summary>
+        /// 软件窗口加载时执行
+        /// </summary>
         void OnWindowLoad(Window window, ChromiumWebBrowser browser);
 
     }

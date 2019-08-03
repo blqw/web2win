@@ -18,8 +18,7 @@ namespace web2win.Plugins
             => ((ChromiumWebBrowser)sender).ExecuteScriptAsync(@"
 history.pushState(null, null, document.URL);
 window.addEventListener('popstate', function () {
-    history.pushState(null, null, document.URL);
-});
-");
+history.pushState(null, null, document.URL);
+});");
     }
 }
