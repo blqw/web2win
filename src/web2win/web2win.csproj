@@ -99,6 +99,8 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -120,6 +122,7 @@
     <Compile Include="Config.cs" />
     <Compile Include="ConsoleHandler.cs" />
     <Compile Include="ConsoleLog.cs" />
+    <Compile Include="HotKey.cs" />
     <Compile Include="PlugInManager.cs" />
     <Compile Include="Plugins\DevToolsPlugin.cs" />
     <Compile Include="Plugins\DisabledBackPlugin.cs" />
@@ -127,6 +130,7 @@
     <Compile Include="Plugins\LaunchPlugin.cs" />
     <Compile Include="Plugins\LogPlugin.cs" />
     <Compile Include="Plugins\MenuPlugin.cs" />
+    <Compile Include="Plugins\NotifyIconPlugin.cs" />
     <Compile Include="Plugins\PluginBase.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="StartupCommands.cs" />

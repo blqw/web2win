@@ -56,8 +56,11 @@ namespace web2win
         public bool EnableF12 { get; set; }
         // 启用小托盘
         public bool EnableTray { get; set; }
-        // 启用快捷键
         // 最小化到托盘
+        public bool MinimizeToTray { get; set; }
+        // 启用老板键
+        public string BossKey { get; set; }
+
         // 限制域名
         // 保持心跳
         public bool Topmost { get; set; }

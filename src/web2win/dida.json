@@ -7,5 +7,7 @@
   //"disable_history": false
   //"browser_loglevel": "error",
   "enable_f12": true,
+  "enable_tray": true,
+  "minimize_to_tray": true,
   "url": "https://www.baidu.com"
 }
