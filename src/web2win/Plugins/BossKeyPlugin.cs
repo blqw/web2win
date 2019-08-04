@@ -132,7 +132,6 @@ namespace web2win.Plugins
                 }
                 else
                 {
-                    ConsoleHandler.Show();
                     Window.Show();
                     Window.Activate();
                 }

@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Diagnostics;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -16,6 +17,7 @@ namespace web2win
 
             Console.WriteLine("程序启动");
 
+
             var app = new App();
             if (StartupCommands.Config == null)
             {
@@ -23,10 +25,14 @@ namespace web2win
             }
             else
             {
+                if (StartupCommands.Console)
+                {
+                    ConsoleWindow.Initialize();
+                }
                 using (WebView.UseCef())
                 {
-                    app.Run(new ConsoleWindow());
-                    //app.Run(new MainWindow());
+                    //app.Run(ConsoleWindow.Instance);
+                    app.Run(new MainWindow());
                 }
             }
         }

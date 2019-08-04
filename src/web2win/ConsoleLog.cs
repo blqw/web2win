@@ -14,39 +14,17 @@ namespace web2win
 {
     class ConsoleLog
     {
-        static readonly string _path = $"Logs\\{DateTime.Now:yyyy_MM_dd_HH_mm_ss_fff}.log";
-
         public static void Enable()
         {
-            Directory.CreateDirectory(Path.GetDirectoryName(_path));
-            var logWriter = new StreamWriter(File.OpenWrite(_path));
+            Directory.CreateDirectory(Path.GetDirectoryName(LogFilePath));
+            var logWriter = new StreamWriter(File.Open(LogFilePath, FileMode.OpenOrCreate, FileAccess.Write, FileShare.Read));
+            logWriter.AutoFlush = true;
 
             Console.SetOut(new Out(Console.Out.Encoding, Console.Out.FormatProvider, Console.Out, logWriter));
             Console.SetError(new Out(Console.Error.Encoding, Console.Error.FormatProvider, Console.Error, logWriter));
         }
 
-        class MyStream : Stream
-        {
-            private readonly Stream _stream;
-
-            public MyStream(Stream stream) => _stream = stream;
-
-            public override void Flush() => _stream.Flush();
-            public override long Seek(long offset, SeekOrigin origin) => _stream.Seek(offset, origin);
-            public override void SetLength(long value) => _stream.SetLength(value);
-            public override int Read(byte[] buffer, int offset, int count) => _stream.Read(buffer, offset, count);
-            public override void Write(byte[] buffer, int offset, int count) => _stream.Write(buffer, offset, count);
-
-            public override bool CanRead => _stream.CanRead;
-
-            public override bool CanSeek => _stream.CanSeek;
-
-            public override bool CanWrite => _stream.CanWrite;
-
-            public override long Length => _stream.Length;
-
-            public override long Position { get => _stream.Position; set => _stream.Position = value; }
-        }
+        public static string LogFilePath { get; } = $"Logs\\{DateTime.Now:yyyy_MM_dd_HH_mm_ss_fff}.log";
 
         class Out : TextWriter
         {
@@ -54,11 +32,11 @@ namespace web2win
             {
                 foreach (var writer in _writers)
                 {
-                    writer.Write(DateTime.Now.ToString("yyyy-MM-dd HH:mm:dd.fff  "));
+                    writer.Write(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff  "));
                 }
             }
 
-            readonly IEnumerable<TextWriter> _writers;
+            readonly List<TextWriter> _writers;
             private bool _isNewLine = true;
             public Out(Encoding encoding, IFormatProvider formatProvider, params TextWriter[] writers)
                 : base(formatProvider)
@@ -76,7 +54,7 @@ namespace web2win
                         list.Add(writer);
                     }
                 }
-                _writers = list.AsReadOnly();
+                _writers = list;
             }
 
             public override Encoding Encoding { get; }
@@ -91,7 +69,6 @@ namespace web2win
                 foreach (var writer in _writers)
                 {
                     action(writer);
-                    writer.Flush();
                 }
             }
 
@@ -105,7 +82,6 @@ namespace web2win
             {
                 if (value == null)
                 {
-                    WriteTime();
                     Execute(x => x.Write(value));
                     _isNewLine = true;
                 }
@@ -161,14 +137,12 @@ namespace web2win
 
             public override void Write(char[] buffer)
             {
-                WriteTime();
                 Execute(x => x.Write(buffer));
                 _isNewLine = buffer != null && buffer.Length > 0 && buffer[buffer.Length - 1] == '\n';
             }
 
             public override void Write(char[] buffer, int index, int count)
             {
-                WriteTime();
                 Execute(x => x.Write(buffer, index, count));
                 _isNewLine = buffer != null && buffer.Length > 0 && buffer[Math.Min(buffer.Length - 1, index + count)] == '\n';
             }

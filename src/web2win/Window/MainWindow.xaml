@@ -34,9 +34,9 @@
             </Setter>
         </Style>
     </Window.Resources>
-    
+
     <Grid>
-        <Button Content="控制台" Panel.ZIndex="10000" HorizontalAlignment="Right" VerticalAlignment="Top" 
+        <Button Content="控制台" Name="btnConsole" Panel.ZIndex="10000" HorizontalAlignment="Right" VerticalAlignment="Top" 
                 Margin="0 -30 150 0" Width="50" Height="30" Click="Button_Click"  WindowChrome.IsHitTestVisibleInChrome="True"
                 Background="Transparent" BorderBrush="#ddd" Foreground="White" Style="{StaticResource BtnInfoStyle}" />
         <Grid Name="main" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.ColumnSpan="3"  >

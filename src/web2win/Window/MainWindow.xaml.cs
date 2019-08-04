@@ -27,7 +27,7 @@ namespace web2win
         public MainWindow()
         {
             InitializeComponent();
-
+            btnConsole.Visibility = StartupCommands.Console ? Visibility.Visible : Visibility.Hidden;
             Height = 100;
             Width = 100;
             Top = -500;
@@ -59,9 +59,8 @@ namespace web2win
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            MessageBox.Show("Test");
-        }
+            => ConsoleWindow.Toggle();
+        
 
         private void Border_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {

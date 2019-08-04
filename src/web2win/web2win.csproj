@@ -120,7 +120,6 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Config.cs" />
-    <Compile Include="ConsoleHandler.cs" />
     <Compile Include="ConsoleLog.cs" />
     <Compile Include="Window\ConsoleWindow.xaml.cs">
       <DependentUpon>ConsoleWindow.xaml</DependentUpon>
