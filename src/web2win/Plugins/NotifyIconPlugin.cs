@@ -32,10 +32,10 @@ namespace web2win.Plugins
         private void Browser_FrameLoadEnd(object sender, CefSharp.FrameLoadEndEventArgs e)
         {
             var browser = (ChromiumWebBrowser)sender;
-            var window = (Window)browser.Parent;
             browser.FrameLoadEnd -= Browser_FrameLoadEnd;
-            window.Dispatcher?.Invoke(() =>
+            browser.Dispatcher?.Invoke(() =>
             {
+                var window = Window.GetWindow(browser);
                 var notify = new NotifyIcon
                 {
                     Text = window.Title,
@@ -50,18 +50,18 @@ namespace web2win.Plugins
                 notify.DoubleClick += (_, x) => Toggle(window);
 
                 notify.Visible = true;
-            });
 
-            if (MinimizeToTray)
-            {
-                window.StateChanged += (_, x) =>
+                if (MinimizeToTray)
                 {
-                    if (window.WindowState == WindowState.Minimized)
+                    window.StateChanged += (_, x) =>
                     {
-                        window.Hide();
-                    }
-                };
-            }
+                        if (window.WindowState == WindowState.Minimized)
+                        {
+                            window.Hide();
+                        }
+                    };
+                }
+            });
         }
 
         private ContextMenu CreateMenu(params string[] texts)

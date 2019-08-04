@@ -8,11 +8,13 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Markup;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using web2win.Plugins;
 
 namespace web2win
 {
-    class WebView
+    class WebView : ChromiumWebBrowser
     {
         public static IDisposable UseCef()
         {
@@ -64,96 +66,68 @@ namespace web2win
 
         //=============================================================================================
 
-        public ChromiumWebBrowser Browser { get; private set; }
+        const string INDEX_PAGE = "about:blank";
 
-        private Task CreateBrowser()
+        public WebView(string configJson)
+            : base(INDEX_PAGE)
         {
             var handler = new WebViewHandlers();
-            const string indexPage = "about:blank";
-            Browser = new ChromiumWebBrowser(indexPage)
+            MenuHandler = handler;
+            //KeyboardHandler = new KeyBoardHandler(this),
+            LifeSpanHandler = handler;
+            //DownloadHandler = new DownloadHandler(),
+            //DragHandler = new DragHandler(),
+            RequestHandler = handler;
+            FrameLoadStart += firstLoad;
+
+            async void firstLoad(object sender, FrameLoadStartEventArgs e)
             {
-                HorizontalAlignment = HorizontalAlignment.Stretch,
-                VerticalAlignment = VerticalAlignment.Stretch,
-                MenuHandler = handler,
-                //KeyboardHandler = new KeyBoardHandler(this),
-                LifeSpanHandler = handler,
-                //DownloadHandler = new DownloadHandler(),
-                //DragHandler = new DragHandler(),
-                RequestHandler = handler,
-            };
+                Dispatcher?.Invoke(() => Title = "");
+                FrameLoadStart -= firstLoad;
 
-            var semaphore = new SemaphoreSlim(0, 1);
-
-            Browser.FrameLoadStart += FrameLoadStart;
-
-            return semaphore.WaitAsync();
-
-            void FrameLoadStart(object sender, FrameLoadStartEventArgs e)
-            {
-                Browser.Dispatcher?.Invoke(() => Browser.Title = "");
-                using (semaphore)
+                var json = await this.EvaluateScriptAsync("(function(){return " + configJson + ";})()");
+                if (!json.Success || !(json.Result is ExpandoObject obj))
                 {
-                    Browser.FrameLoadStart -= FrameLoadStart;
-                    semaphore.Release();
+                    throw new Exception("配置文件格式错误:" + json.Message + Environment.NewLine + configJson);
                 }
+                var config = new Config(obj);
+                PlugInManager.Configuration(config);
+                Dispatcher?.Invoke(() => Address = GetRealUrl(config.Url));
+                Configurated?.Invoke(this, EventArgs.Empty);
             }
+
+            //FrameLoadEnd += WebView_FrameLoadEnd;
         }
 
+        //private void WebView_FrameLoadEnd(object sender, FrameLoadEndEventArgs e)
+        //{
+        //    this.Dispatcher?.Invoke(() =>
+        //    {
+        //        var bmp = new RenderTargetBitmap(1, 1, 0, 0, PixelFormats.Pbgra32);
+        //        bmp.Render(this);
+        //        var stride = (bmp.PixelWidth * bmp.Format.BitsPerPixel + 7) / 8;
+        //        var pixelByteArray = new byte[bmp.PixelHeight * stride];
+        //        bmp.CopyPixels(pixelByteArray, stride, 0);
+        //        Background = new SolidColorBrush(Color.FromArgb(pixelByteArray[3], pixelByteArray[2], pixelByteArray[1], pixelByteArray[0]));
+        //    });
+        //}
 
-        public void Bind(Window window, string configJson)
-        {
-            CreateBrowser()
-                .ContinueWith(async task =>
-                {
-                    var json = await Browser.EvaluateScriptAsync("(function(){return " + configJson + ";})()");
-                    if (!json.Success || !(json.Result is ExpandoObject obj))
-                    {
-                        MessageBox.Show("配置文件格式错误:" + json.Message + Environment.NewLine + configJson);
-                        window.Dispatcher?.Invoke(window.Close);
-                        return;
-                    }
-                    var config = new Config(obj);
-                    PlugInManager.Configuration(config);
-                    PlugInManager.Execute(x => x.OnWindowLoad(window, Browser));
-                    Address = GetRealUrl(config.Url);
-                });
-            window.Closed += Window_Closed;
-            ((IAddChild)window).AddChild(Browser);
-        }
+        public event EventHandler Configurated;
 
-        private void Window_Closed(object sender, EventArgs e)
-        {
-            foreach (var action in new Action[]{
-                () => Browser?.CloseDevTools(),
-                () => Browser?.GetBrowser().CloseBrowser(true),
-                () => Browser?.Dispose(),
-            })
-            {
-                try
-                {
-                    action();
-                }
-                catch { }
-            }
-        }
-
-        public string Address
-        {
-            get => Browser?.Dispatcher?.Invoke(() => Browser.Address);
-            set => Browser?.Dispatcher?.Invoke(() => Browser.Address = value);
-        }
+        
 
         private string GetRealUrl(string url)
         {
+            var address = Address;
             if (!string.IsNullOrWhiteSpace(url))
             {
                 //处理相对路径的硬盘文件
                 var uri = new Uri(url, UriKind.RelativeOrAbsolute);
                 if (uri.IsAbsoluteUri == false && url.IndexOf("://", StringComparison.Ordinal) < 0)
                 {
-                    if (Browser?.Address != null && Browser.Address.IndexOf("://", StringComparison.Ordinal) >= 0)
+                    if (address != null && address.IndexOf("://", StringComparison.Ordinal) >= 0)
                     {
-                        return new Uri(new Uri(Browser.Address), url).AbsoluteUri;
+                        return new Uri(new Uri(address), url).AbsoluteUri;
                     }
                     return "file://" + Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory + url);
                 }

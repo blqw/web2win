@@ -85,7 +85,7 @@
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
+    <OutputType>WinExe</OutputType>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>web2win.Program</StartupObject>
@@ -122,9 +122,12 @@
     <Compile Include="Config.cs" />
     <Compile Include="ConsoleHandler.cs" />
     <Compile Include="ConsoleLog.cs" />
+    <Compile Include="Window\ConsoleWindow.xaml.cs">
+      <DependentUpon>ConsoleWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="HotKey.cs" />
     <Compile Include="PlugInManager.cs" />
-    <Compile Include="Plugins\BoosKeyPlugin.cs" />
+    <Compile Include="Plugins\BossKeyPlugin.cs" />
     <Compile Include="Plugins\DevToolsPlugin.cs" />
     <Compile Include="Plugins\DisabledBackPlugin.cs" />
     <Compile Include="Plugins\HeartbeatPlugin.cs" />
@@ -137,9 +140,16 @@
     <Compile Include="Plugins\UrlFilterPlugin.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="StartupCommands.cs" />
+    <Compile Include="Window\TestWindow.xaml.cs">
+      <DependentUpon>TestWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="WebView.cs" />
     <Compile Include="WebViewHandlers.cs" />
-    <Page Include="MainWindow.xaml">
+    <Page Include="Window\ConsoleWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Window\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -147,10 +157,14 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="MainWindow.xaml.cs">
+    <Compile Include="Window\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Window\TestWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">

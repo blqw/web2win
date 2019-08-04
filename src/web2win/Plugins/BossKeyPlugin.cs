@@ -11,7 +11,7 @@ using CefSharp.Wpf;
 
 namespace web2win.Plugins
 {
-    class BoosKeyPlugin : PluginBase
+    class BossKeyPlugin : PluginBase
     {
         public HotKey.KeyModifiers Modifiers { get; private set; }
         public Keys Key { get; private set; }
@@ -132,6 +132,7 @@ namespace web2win.Plugins
                 }
                 else
                 {
+                    ConsoleHandler.Show();
                     Window.Show();
                     Window.Activate();
                 }

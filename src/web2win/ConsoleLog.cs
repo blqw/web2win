@@ -20,10 +20,6 @@ namespace web2win
         {
             Directory.CreateDirectory(Path.GetDirectoryName(_path));
             var logWriter = new StreamWriter(File.OpenWrite(_path));
-            //var @out = Console.Error;
-            //var writer = (StreamWriter)@out.GetType().GetField("_out", (BindingFlags)(-1)).GetValue(@out);
-            //writer.GetType().GetField("stream", (BindingFlags)(-1)).SetValue(writer, new MyStream(writer.BaseStream));
-            //@out.GetType().GetField("_out", (BindingFlags)(-1)).SetValue(@out, new StreamWriter(new MyStream(writer.BaseStream)));
 
             Console.SetOut(new Out(Console.Out.Encoding, Console.Out.FormatProvider, Console.Out, logWriter));
             Console.SetError(new Out(Console.Error.Encoding, Console.Error.FormatProvider, Console.Error, logWriter));

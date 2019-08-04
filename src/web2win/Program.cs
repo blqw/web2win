@@ -14,17 +14,8 @@ namespace web2win
         {
             ConsoleLog.Enable();
 
-
             Console.WriteLine("程序启动");
 
-
-            if (StartupCommands.Console)
-            {
-                Task.Delay(2000).ContinueWith(t =>
-                {
-                    //ConsoleHandler.Show();
-                });
-            }
             var app = new App();
             if (StartupCommands.Config == null)
             {
@@ -34,7 +25,8 @@ namespace web2win
             {
                 using (WebView.UseCef())
                 {
-                    app.Run(new MainWindow());
+                    app.Run(new ConsoleWindow());
+                    //app.Run(new MainWindow());
                 }
             }
         }
