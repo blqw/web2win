@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CefSharp;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -56,33 +57,27 @@ namespace web2win
                 MessageBox.Show(ex.Message);
                 Close();
             }
+
+
+
+            if (StartupCommands.Console)
+            {
+                ConsoleWindow.Initialize();
+                this.Closing += (_, x) => ConsoleWindow.Close();
+            }
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void ShowConsole(object sender, RoutedEventArgs e)
             => ConsoleWindow.Toggle();
-        
+
+        private void ShowDevTools(object sender, RoutedEventArgs e)
+           => WebView.ShowDevTools();
 
         private void Border_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             if (e.ClickCount == 2)
             {
-                //var bmp = new RenderTargetBitmap(1, 1, 0, 0, PixelFormats.Pbgra32);
-                //bmp.Render(WebView);
-                //var stride = (bmp.PixelWidth * bmp.Format.BitsPerPixel + 7) / 8;
-                //var pixelByteArray = new byte[bmp.PixelHeight * stride];
-                //bmp.CopyPixels(pixelByteArray, stride, 0);
-
-
-                //this.Background = new SolidColorBrush(System.Windows.Media.Color.FromArgb(pixelByteArray[3], pixelByteArray[2], pixelByteArray[1], pixelByteArray[0]));
-                //var rc = new System.Drawing.Rectangle(0, 0, 1, 1);
-                //using (var bitmap = new Bitmap(rc.Width, rc.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb))
-                //using (var memoryGrahics = Graphics.FromImage(bitmap))
-                //{
-                //    memoryGrahics.CopyFromScreen(rc.X, rc.Y, 0, 0, rc.Size, CopyPixelOperation.SourceCopy);
-                //    var c = bitmap.GetPixel(0, 0);
-                //    this.Background = new SolidColorBrush(System.Windows.Media.Color.FromArgb(c.A, c.R, c.G, c.B));
-                //}
-                //this.Close();
+                this.Close();
             }
         }
     }

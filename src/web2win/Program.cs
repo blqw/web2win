@@ -25,10 +25,6 @@ namespace web2win
             }
             else
             {
-                if (StartupCommands.Console)
-                {
-                    ConsoleWindow.Initialize();
-                }
                 using (WebView.UseCef())
                 {
                     //app.Run(ConsoleWindow.Instance);

@@ -114,7 +114,21 @@ namespace web2win
 
         public event EventHandler Configurated;
 
-        
+        //protected override void Dispose(bool disposing)
+        //{
+        //    foreach (var action in new Action[]{
+        //        () => this.CloseDevTools(),
+        //        () => GetBrowser().CloseBrowser(true),
+        //    })
+        //    {
+        //        try
+        //        {
+        //            action();
+        //        }
+        //        catch { }
+        //    }
+        //    base.Dispose(disposing);
+        //}
 
         private string GetRealUrl(string url)
         {

@@ -6,27 +6,28 @@
         xmlns:wpf="clr-namespace:CefSharp.Wpf;assembly=CefSharp.Wpf"
         xmlns:local="clr-namespace:web2win"
         mc:Ignorable="d"
-        Title="" Height="400" Width="800">
+        Title="" Height="400" Width="800" >
 
     <Window.Resources>
         <Style x:Key="BtnInfoStyle" TargetType="Button">
-            <Setter Property="Width" Value="70"/>
-            <Setter Property="Height" Value="25"/>
+            <Setter Property="Width" Value="45"/>
+            <Setter Property="Height" Value="29"/>
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="Background" Value="#43a9c7"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <!--<Setter Property="Background" Value="Transparent"/>-->
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <Border x:Name="border" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" SnapsToDevicePixels="True">
-                            <TextBlock Text="{TemplateBinding Content}" Foreground="{TemplateBinding Foreground}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        <Border Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="border" Property="Background" Value="#1e607f"/>
+                                <Setter Property="Background" Value="#1e607f"/>
                             </Trigger>
                             <Trigger Property="IsPressed" Value="True">
-                                <Setter TargetName="border" Property="Background" Value="#2a89a4"/>
+                                <Setter Property="Background" Value="#2a89a4"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -36,20 +37,26 @@
     </Window.Resources>
 
     <Grid>
+
+        <!--<Button Content="调试" Name="btnDevTools" Panel.ZIndex="10000" HorizontalAlignment="Right" VerticalAlignment="Top" 
+                Margin="0 -30 200 0" Width="50" Height="30" Click="ShowDevTools"  WindowChrome.IsHitTestVisibleInChrome="True"
+                Style="{StaticResource BtnInfoStyle}" />-->
         <Button Content="控制台" Name="btnConsole" Panel.ZIndex="10000" HorizontalAlignment="Right" VerticalAlignment="Top" 
-                Margin="0 -30 150 0" Width="50" Height="30" Click="Button_Click"  WindowChrome.IsHitTestVisibleInChrome="True"
-                Background="Transparent" BorderBrush="#ddd" Foreground="White" Style="{StaticResource BtnInfoStyle}" />
-        <Grid Name="main" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.ColumnSpan="3"  >
+                Margin="0 -30 150 0" Width="50" Height="30" Click="ShowConsole"  WindowChrome.IsHitTestVisibleInChrome="True"
+                Style="{StaticResource BtnInfoStyle}" />
+
+
+        <Grid Name="main" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.ColumnSpan="2"  >
         </Grid>
     </Grid>
     <WindowChrome.WindowChrome>
-        <WindowChrome GlassFrameThickness="0 64 0 0" NonClientFrameEdges="Left,Bottom,Right" CaptionHeight="30"/>
+        <WindowChrome GlassFrameThickness="0 64 0 0" NonClientFrameEdges="Left,Bottom,Right" CaptionHeight="30" />
     </WindowChrome.WindowChrome>
     <Window.Template>
         <ControlTemplate TargetType="Window">
             <Border Padding="0 30 0 0">
                 <Grid x:Name="RootGrid" Background="{TemplateBinding Background}">
-                    <Border VerticalAlignment="Top" Height="30" Margin="34,-30,140,0" >
+                    <Border VerticalAlignment="Top" Height="30" Margin="34,-30,0,0" >
                         <TextBlock Foreground="White" Margin="0,8,16,8" VerticalAlignment="Center"
                                FontSize="12" Text="{TemplateBinding Title}" />
 
