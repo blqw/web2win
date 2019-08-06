@@ -1,6 +1,8 @@
-﻿using CefSharp.Wpf;
+﻿using CefSharp;
+using CefSharp.Wpf;
 using System;
 using System.IO;
+using System.Linq;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media.Imaging;
@@ -18,6 +20,7 @@ namespace web2win.Plugins
             var screeHeight = SystemParameters.FullPrimaryScreenHeight;
             var screeWidth = SystemParameters.FullPrimaryScreenWidth;
             var config = Config;
+
             window.Dispatcher?.Invoke(() =>
             {
                 window.Title = config.Title ?? "web2win";
@@ -54,6 +57,69 @@ namespace web2win.Plugins
                 }
             });
 
+
+            var cookieManager = browser.GetCookieManager();
+            var visitor = new CookieVisitor();
+            visitor.Callback(value =>
+            {
+                var array = value.Split(',').Select(int.Parse).ToArray();
+                window.Dispatcher?.Invoke(() =>
+                {
+                    window.Left = array[0];
+                    window.Top = array[1];
+                    window.Width = array[2];
+                    window.Height = array[3];
+                });
+            });
+
+
+            cookieManager.VisitUrlCookies("http://location.com", true, visitor);
+
+            if (Config.SaveExitedLocation)
+            {
+                window.Closing += Window_Closing;
+            }
         }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            try
+            {
+                var window = (Window)sender;
+                var cookieManager = Cef.GetGlobalCookieManager();
+                cookieManager.SetCookie("http://location.com", new Cookie()
+                {
+                    Domain = "location.com",
+                    Name = "location",
+                    Value = $"{window.Left},{window.Top},{window.Width},{window.Height}",
+                    Expires = DateTime.MinValue,
+                    HttpOnly = false,
+                });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+        }
+
+        public class CookieVisitor : ICookieVisitor
+        {
+            private Action<string> _action;
+
+            public bool Visit(Cookie cookie, int count, int total, ref bool deleteCookie)
+            {
+                if (cookie.Name == "location")
+                {
+                    _action(cookie.Value);
+                    return false;
+                }
+                return true;
+            }
+
+            public void Dispose() { }
+
+            public void Callback(Action<string> action) => _action = action;
+        }
+
     }
 }

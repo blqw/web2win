@@ -130,7 +130,7 @@ namespace web2win
         /// <summary>
         /// 保存位置
         /// </summary>
-        public string SaveExitedLocation { get; set; }
+        public bool SaveExitedLocation { get; set; }
         
         /// <summary>
         /// 弹出页面目标 

@@ -15,5 +15,6 @@
 
   "browser_loglevel": "error",  // 浏览器日志级别(default,verbose,info,warning,erroe,fatal,disable)
   //"url_filter": "^http[s]?://([^.]+[.])?(baidu[.]|sina[.])", // 页面地址过滤(未匹配的地址无法打开)
+  "save_exited_location": true, // 退出时保存位置
   "url": "http://www.baidu.com" // 软件启动时显示的页面
 }
