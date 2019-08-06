@@ -13,15 +13,14 @@ namespace web2win
         [STAThread]
         static void Main()
         {
-            ConsoleLog.Enable();
+            ConsoleLog.WriteToFile();
 
             Console.WriteLine("程序启动");
-
 
             var app = new App();
             if (StartupCommands.Config == null)
             {
-
+                app.Run(new ConfigWindow());
             }
             else
             {

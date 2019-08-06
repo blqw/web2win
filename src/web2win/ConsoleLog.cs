@@ -14,7 +14,7 @@ namespace web2win
 {
     class ConsoleLog
     {
-        public static void Enable()
+        public static void WriteToFile()
         {
             Directory.CreateDirectory(Path.GetDirectoryName(LogFilePath));
             var logWriter = new StreamWriter(File.Open(LogFilePath, FileMode.OpenOrCreate, FileAccess.Write, FileShare.Read));

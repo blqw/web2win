@@ -1,0 +1,29 @@
+﻿{
+  "title": "",        // 软件标题, 为null空空字符串表示默认(下同), 默认取页面标题
+  "icon": "",         // 软件图标, 默认取网站图标
+  "top": null,        // 软件启动时的top坐标, 默认居中
+  "left": null,   
+  "width": 800,
+  "height": 400,
+  "min_width": null,  // 最小宽度
+  "min_height": null, 
+  "max_width": null,  //最大宽度
+  "max_height": null,
+
+  "topmost": false,             // 置顶显示
+  "disable_right_click": false, // 禁用鼠标右键(但保留复制,粘贴等操作)
+  "disable_history": false,     // 禁用历史记录
+  "enable_f12": false,          // 启用F12(打开网页调试)
+  "enable_tray": false,         // 启用小托盘
+  "minimize_to_tray": false,    // 最小化到推盘(必须先开启 enable_tray)
+  "boss_key": "alt+q",          // 老板键
+  "save_exited_location": false,// 退出时保存位置
+  "popuppage_target": "_blank", // 弹出页面状态, _self, _blank(默认), _top
+
+  "heartbeat_url": "",          // 心跳地址
+  "heartbeat_interval": 60000,  // 心跳频率
+
+  "browser_loglevel": "default",// 浏览器日志级别, 从低到高: default(默认), verbose, info, warning, erroe, fatal, disable
+  "url_filter": "",             // 页面地址匹配正则 (未匹配的地址无法打开) 如: ^http[s]?://([^.]+[.])?(baidu[.]|sina[.]) 只能打开baidu.和sina.
+  "url": ""                     // 软件启动时显示的页面
+}

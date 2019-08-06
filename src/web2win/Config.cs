@@ -16,6 +16,10 @@ namespace web2win
         {
             foreach (var item in dict)
             {
+                if (item.Value == null || (item.Value is string s && s.Length == 0))
+                {
+                    continue;
+                }
                 if (Properties.TryGetValue(item.Key.Replace("_", ""), out var prop) && prop.CanWrite)
                 {
                     prop.SetValue(this, Convert.ChangeType(item.Value, Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType));
@@ -35,6 +39,31 @@ namespace web2win
         /// </summary>
         public string Url { get; set; }
         /// <summary>
+        /// 图标
+        /// </summary>
+        /// <remarks>优先使用配置中的图标,如果没有则获取快捷方式的图标,如果还没有则获取网站的图标</remarks>
+        public string Icon { get; set; }
+        /// <summary>
+        /// 初始Top
+        /// </summary>
+        public int? Top { get; set; }
+        /// <summary>
+        /// 初始Left
+        /// </summary>
+        public int? Left { get; set; }
+        /// <summary>
+        /// 标题
+        /// </summary>
+        public string Title { get; set; }
+        /// <summary>
+        /// 初始宽度
+        /// </summary>
+        public int? Width { get; set; }
+        /// <summary>
+        /// 初始高度
+        /// </summary>
+        public int? Height { get; set; }
+        /// <summary>
         /// 最大宽度
         /// </summary>
         public int? MaxWidth { get; set; }
@@ -50,23 +79,7 @@ namespace web2win
         /// 最小高度
         /// </summary>
         public int? MinHeight { get; set; }
-        /// <summary>
-        /// 初始宽度
-        /// </summary>
-        public int? Width { get; set; }
-        /// <summary>
-        /// 初始高度
-        /// </summary>
-        public int? Height { get; set; }
 
-        /// <summary>
-        /// 初始Top
-        /// </summary>
-        public int? Top { get; set; }
-        /// <summary>
-        /// 初始Left
-        /// </summary>
-        public int? Left { get; set; }
         /// <summary>
         /// 窗口置顶
         /// </summary>
@@ -79,15 +92,6 @@ namespace web2win
         /// 禁用历史
         /// </summary>
         public bool DisableHistory { get; set; }
-        /// <summary>
-        /// 标题
-        /// </summary>
-        public string Title { get; set; }
-        /// <summary>
-        /// 图标
-        /// </summary>
-        /// <remarks>优先使用配置中的图标,如果没有则获取快捷方式的图标,如果还没有则获取网站的图标</remarks>
-        public string Icon { get; set; }
         /// <summary>
         /// 启用F12调试
         /// </summary>
@@ -123,10 +127,15 @@ namespace web2win
         /// </summary>
         public string BrowserLogLevel { get; set; }
 
-
-
-
-
+        /// <summary>
+        /// 保存位置
+        /// </summary>
+        public string SaveExitedLocation { get; set; }
+        
+        /// <summary>
+        /// 弹出页面目标 
+        /// </summary>
+        public string PopupPageTarget { get; set; }
 
 
     }
