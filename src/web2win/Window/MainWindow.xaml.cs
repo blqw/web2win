@@ -48,7 +48,7 @@ namespace web2win
                     VerticalAlignment = VerticalAlignment.Stretch,
                 };
                 main.Children.Add(webview);
-                webview.Configurated += (_, e) => PlugInManager.Execute(x => x.OnWindowLoad(this, webview));
+                webview.Configurated += (_, e) => PlugInManager.OnWindowLoad(this, webview);
                 WebView = webview;
                 //SetBinding(BackgroundProperty, new Binding("Background") { Source = webview });
             }

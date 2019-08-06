@@ -3,68 +3,93 @@ using System.IO;
 using System.Security.Cryptography.X509Certificates;
 using CefSharp;
 using CefSharp.Handler;
+using web2win.Plugins;
 
 namespace web2win
 {
     class WebViewHandlers : ISchemeHandlerFactory, IContextMenuHandler, ILifeSpanHandler, IRequestHandler
     {
-        IResourceHandler ISchemeHandlerFactory.Create(IBrowser browser, IFrame frame, string schemeName, IRequest request)
+        public IResourceHandler Create(IBrowser browser, IFrame frame, string schemeName, IRequest request)
             => new ResourceHandler();
 
-        void IContextMenuHandler.OnBeforeContextMenu(IWebBrowser chromiumWebBrowser, IBrowser browser,
+        public void OnBeforeContextMenu(IWebBrowser chromiumWebBrowser, IBrowser browser,
             IFrame frame, IContextMenuParams parameters, IMenuModel model)
-            => PlugInManager.Execute<IContextMenuHandler>(x => x.OnBeforeContextMenu(chromiumWebBrowser, browser, frame, parameters, model));
+            => PlugInManager.Execute(new PluginEventArgs(new
+            {
+                chromiumWebBrowser,
+                browser,
+                frame,
+                parameters,
+                model
+            }));
 
-        bool IContextMenuHandler.OnContextMenuCommand(IWebBrowser chromiumWebBrowser, IBrowser browser,
+        public bool OnContextMenuCommand(IWebBrowser chromiumWebBrowser, IBrowser browser,
             IFrame frame, IContextMenuParams parameters, CefMenuCommand commandId, CefEventFlags eventFlags)
             => false;
-        void IContextMenuHandler.OnContextMenuDismissed(IWebBrowser chromiumWebBrowser, IBrowser browser, IFrame frame) { }
+        public void OnContextMenuDismissed(IWebBrowser chromiumWebBrowser, IBrowser browser, IFrame frame) { }
 
-        bool IContextMenuHandler.RunContextMenu(IWebBrowser chromiumWebBrowser, IBrowser browser, IFrame frame,
+        public bool RunContextMenu(IWebBrowser chromiumWebBrowser, IBrowser browser, IFrame frame,
             IContextMenuParams parameters, IMenuModel model, IRunContextMenuCallback callback)
             => false;
 
-        bool ILifeSpanHandler.OnBeforePopup(IWebBrowser chromiumWebBrowser, IBrowser browser, IFrame frame,
+
+        public bool OnBeforePopup(IWebBrowser chromiumWebBrowser, IBrowser browser, IFrame frame,
             string targetUrl, string targetFrameName, WindowOpenDisposition targetDisposition, bool userGesture,
             IPopupFeatures popupFeatures, IWindowInfo windowInfo, IBrowserSettings browserSettings,
             ref bool noJavascriptAccess, out IWebBrowser newBrowser)
         {
-            var a = noJavascriptAccess;
-            var b = (IWebBrowser)null;
-            var c = true;
-            PlugInManager.Execute<ILifeSpanHandler>(x =>
+            var args = new PluginEventArgs(new
             {
-                c &= x.OnBeforePopup(chromiumWebBrowser, browser, frame, targetUrl, targetFrameName, targetDisposition,
-                    userGesture, popupFeatures, windowInfo, browserSettings, ref a, out var b1);
-                if (b != null)
-                {
-                    b = b1;
-                }
+                chromiumWebBrowser,
+                browser,
+                frame,
+                targetUrl,
+                targetFrameName,
+                targetDisposition,
+                userGesture,
+                popupFeatures,
+                windowInfo,
+                browserSettings,
+                noJavascriptAccess
             });
-            newBrowser = b;
-            return c;
+
+            if (args.Execute())
+            {
+                noJavascriptAccess = args.Get<bool>("noJavascriptAccess");
+                newBrowser = args.Get<IWebBrowser>("newBrowser");
+                return args.GetResult(true);
+            }
+            else
+            {
+                newBrowser = null;
+                return true;
+            }
         }
-        void ILifeSpanHandler.OnAfterCreated(IWebBrowser chromiumWebBrowser, IBrowser browser)
-            => PlugInManager.Execute<ILifeSpanHandler>(x => x.OnAfterCreated(chromiumWebBrowser, browser));
-        bool ILifeSpanHandler.DoClose(IWebBrowser chromiumWebBrowser, IBrowser browser)
+        public void OnAfterCreated(IWebBrowser chromiumWebBrowser, IBrowser browser)
+            => PlugInManager.Execute(new PluginEventArgs(new { chromiumWebBrowser, browser }));
+        public bool DoClose(IWebBrowser chromiumWebBrowser, IBrowser browser)
         {
-            PlugInManager.Execute<ILifeSpanHandler>(x => x.DoClose(chromiumWebBrowser, browser));
-            return false;
+            var args = new PluginEventArgs(new { chromiumWebBrowser, browser });
+            args.Execute();
+            return args.GetResult(false);
         }
-        void ILifeSpanHandler.OnBeforeClose(IWebBrowser chromiumWebBrowser, IBrowser browser)
-            => PlugInManager.Execute<ILifeSpanHandler>(x => x.OnBeforeClose(chromiumWebBrowser, browser));
+        public void OnBeforeClose(IWebBrowser chromiumWebBrowser, IBrowser browser)
+            => PlugInManager.Execute(new PluginEventArgs(new { chromiumWebBrowser, browser }));
 
         IRequestHandler request = new DefaultRequestHandler();
 
         public bool OnBeforeBrowse(IWebBrowser chromiumWebBrowser, IBrowser browser, IFrame frame, IRequest request, bool userGesture, bool isRedirect)
         {
-            //this.request.OnBeforeBrowse(chromiumWebBrowser, browser, frame, request, userGesture, isRedirect);
-            var b = false;
-            PlugInManager.Execute<IRequestHandler>(x => b |= x.OnBeforeBrowse(chromiumWebBrowser, browser, frame, request, userGesture, isRedirect));
-            return b;
+
+            var args = new PluginEventArgs(new { chromiumWebBrowser, browser, frame, request, userGesture, isRedirect });
+            args.Execute();
+            return args.GetResult(false);
         }
 
-        public bool OnOpenUrlFromTab(IWebBrowser chromiumWebBrowser, IBrowser browser, IFrame frame, string targetUrl, WindowOpenDisposition targetDisposition, bool userGesture) => request.OnOpenUrlFromTab(chromiumWebBrowser, browser, frame, targetUrl, targetDisposition, userGesture);
+        public bool OnOpenUrlFromTab(IWebBrowser chromiumWebBrowser, IBrowser browser, IFrame frame, string targetUrl, 
+            WindowOpenDisposition targetDisposition, bool userGesture) 
+            => request.OnOpenUrlFromTab(chromiumWebBrowser, browser, frame, targetUrl, targetDisposition, userGesture);
+
         public bool OnCertificateError(IWebBrowser chromiumWebBrowser, IBrowser browser, CefErrorCode errorCode, string requestUrl, ISslInfo sslInfo, IRequestCallback callback) => request.OnCertificateError(chromiumWebBrowser, browser, errorCode, requestUrl, sslInfo, callback);
         public void OnPluginCrashed(IWebBrowser chromiumWebBrowser, IBrowser browser, string pluginPath) => request.OnPluginCrashed(chromiumWebBrowser, browser, pluginPath);
         public CefReturnValue OnBeforeResourceLoad(IWebBrowser chromiumWebBrowser, IBrowser browser, IFrame frame, IRequest request, IRequestCallback callback) => this.request.OnBeforeResourceLoad(chromiumWebBrowser, browser, frame, request, callback);

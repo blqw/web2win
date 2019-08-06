@@ -8,7 +8,7 @@ using System.Windows;
 
 namespace web2win.Plugins
 {
-    class MenuPlugin : PluginBase, IContextMenuHandler
+    class MenuPlugin : PluginBase
     {
         public bool EnabledHistory { get; private set; }
 
@@ -18,9 +18,9 @@ namespace web2win.Plugins
             EnabledHistory = !config.DisableHistory;
         }
 
-        void IContextMenuHandler.OnBeforeContextMenu(IWebBrowser chromiumWebBrowser, IBrowser browser, IFrame frame,
-            IContextMenuParams parameters, IMenuModel model)
+        public void OnBeforeContextMenu(PluginEventArgs args)
         {
+            var model = args.Get<IMenuModel>();
             var flag = false;
             for (var i = model.Count - 1; i >= 0; i--)
             {
@@ -69,14 +69,5 @@ namespace web2win.Plugins
                 model.RemoveAt(i);
             }
         }
-
-        bool IContextMenuHandler.OnContextMenuCommand(IWebBrowser chromiumWebBrowser, IBrowser browser, IFrame frame,
-            IContextMenuParams parameters, CefMenuCommand commandId, CefEventFlags eventFlags)
-            => false;
-        void IContextMenuHandler.OnContextMenuDismissed(IWebBrowser chromiumWebBrowser, IBrowser browser, IFrame frame) { }
-
-        bool IContextMenuHandler.RunContextMenu(IWebBrowser chromiumWebBrowser, IBrowser browser, IFrame frame,
-            IContextMenuParams parameters, IMenuModel model, IRunContextMenuCallback callback)
-            => false;
     }
 }

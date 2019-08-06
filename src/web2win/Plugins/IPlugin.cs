@@ -23,13 +23,8 @@ namespace web2win.Plugins
         /// </summary>
         bool Enabled { get; }
         /// <summary>
-        /// 获取插件中特定的功能
-        /// </summary>
-        T GetFeature<T>() where T : class;
-        /// <summary>
         /// 软件窗口加载时执行
         /// </summary>
         void OnWindowLoad(Window window, ChromiumWebBrowser browser);
-
     }
 }

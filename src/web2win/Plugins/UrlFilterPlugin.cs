@@ -12,11 +12,11 @@ using System.Windows.Data;
 
 namespace web2win.Plugins
 {
-    class UrlFilterPlugin : DefaultRequestHandler, IPlugin
+    class UrlFilterPlugin : PluginBase
     {
         public Regex Filter { get; private set; }
 
-        public void Configuration(Config config)
+        public override void Configuration(Config config)
         {
             if (config.UrlFilter == null)
             {
@@ -26,23 +26,13 @@ namespace web2win.Plugins
             Enabled = true;
         }
 
-        public bool Enabled { get; protected set; }
-
-        public T GetFeature<T>() where T : class => Enabled ? this as T : null;
-
-        public void OnWindowLoad(Window window, ChromiumWebBrowser browser) { }
-
-        public void Dispose() { }
-
-
-        public override bool OnBeforeBrowse(IWebBrowser chromiumWebBrowser, IBrowser browser,
-            IFrame frame, IRequest request, bool userGesture, bool isRedirect)
+        public void OnBeforeBrowse(PluginEventArgs args)
         {
+            var request = args.Get<IRequest>();
             if (!string.IsNullOrEmpty(request.Url) && request.Url.StartsWith("http", StringComparison.OrdinalIgnoreCase))
             {
-                return !Filter.IsMatch(request.Url);
+                args.Result =!Filter.IsMatch(request.Url);
             }
-            return false;
         }
     }
 }

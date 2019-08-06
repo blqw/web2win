@@ -1,10 +1,14 @@
-﻿using System;
+﻿using CefSharp.Wpf;
+using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using web2win.Plugins;
 
 namespace web2win
@@ -61,8 +65,9 @@ namespace web2win
         {
             public void Dispose()
             {
-                Execute(x => x.Dispose());
                 _plugins?.Clear();
+                _events?.Clear();
+                Execute(x => x.Dispose());
             }
         }
 
@@ -95,11 +100,14 @@ namespace web2win
             }
         }
 
+
+        public static void OnWindowLoad(Window window, ChromiumWebBrowser browser)
+            => Execute(x => x.OnWindowLoad(window, browser));
+
         /// <summary>
         /// 执行插件功能
         /// </summary>
-        public static void Execute<T>(Action<T> action)
-            where T : class
+        private static void Execute(Action<IPlugin> action)
         {
             if (Plugins is null)
             {
@@ -113,11 +121,7 @@ namespace web2win
                 }
                 try
                 {
-                    var x = plugin.GetFeature<T>();
-                    if (x != null)
-                    {
-                        action(x);
-                    }
+                    action(plugin);
                 }
                 catch (Exception ex)
                 {
@@ -125,11 +129,47 @@ namespace web2win
                 }
             }
         }
-        /// <summary>
-        /// 执行插件功能
-        /// </summary>
-        public static void Execute(Action<IPlugin> action)
-            => Execute<IPlugin>(action);
 
+
+        static readonly ConcurrentDictionary<string, List<Action<PluginEventArgs>>> _events
+            = new ConcurrentDictionary<string, List<Action<PluginEventArgs>>>();
+
+        public static bool Execute(this PluginEventArgs args)
+        {
+            if (Plugins is null)
+            {
+                throw new NotSupportedException("请先调用scan方法来扫描所有插件");
+            }
+            var argtypes = new[] { typeof(PluginEventArgs) };
+            var actions = _events.GetOrAdd(args.EventName, methodName =>
+            {
+                var events = new List<Action<PluginEventArgs>>();
+                foreach (var plugin in _plugins)
+                {
+                    var action = plugin.GetType().GetMethod(methodName, argtypes)?.CreateDelegate(typeof(Action<PluginEventArgs>), plugin);
+                    if (action != null)
+                    {
+                        events.Add((Action<PluginEventArgs>)action);
+                    }
+                }
+                return events;
+            });
+
+            foreach (var action in actions)
+            {
+                try
+                {
+                    action(args);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex);
+                }
+            }
+            return actions.Count > 0;
+        }
+
+        public static T GetResult<T>(this PluginEventArgs args, T defaultValue)
+            => args?.Result is T t ? t : defaultValue;
     }
 }

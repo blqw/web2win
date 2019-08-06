@@ -21,7 +21,7 @@
   "popuppage_target": "_blank", // 弹出页面状态, _self, _blank(默认), _top
 
   "heartbeat_url": "",          // 心跳地址
-  "heartbeat_interval": 60000,  // 心跳频率
+  "heartbeat_interval": 60000,  // 心跳频率 (每隔 heartbeat_interval 毫秒访问一次 heartbeat_url)
 
   "browser_loglevel": "default",// 浏览器日志级别, 从低到高: default(默认), verbose, info, warning, erroe, fatal, disable
   "url_filter": "",             // 页面地址匹配正则 (未匹配的地址无法打开) 如: ^http[s]?://([^.]+[.])?(baidu[.]|sina[.]) 只能打开baidu.和sina.
