@@ -11,8 +11,9 @@
   "enable_tray": true,          // 启用小托盘
   "minimize_to_tray": true,     // 最小化到推盘(必须先开启 enable_tray)
   "boss_key": "alt+q",          // 老板键
+  "popuppage_target": "_self", // 弹出页面状态, _self, _blank(默认), _top
 
   "browser_loglevel": "error",  // 浏览器日志级别(default,verbose,info,warning,erroe,fatal,disable)
-  "url_filter": "^http[s]?://([^.]+[.])?(baidu[.]|sina[.])", // 页面地址过滤(未匹配的地址无法打开)
+  //"url_filter": "^http[s]?://([^.]+[.])?(baidu[.]|sina[.])", // 页面地址过滤(未匹配的地址无法打开)
   "url": "http://www.baidu.com" // 软件启动时显示的页面
 }

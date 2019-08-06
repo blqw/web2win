@@ -121,6 +121,7 @@
     </ApplicationDefinition>
     <Compile Include="Config.cs" />
     <Compile Include="Plugins\Argument\PluginEventArgs.cs" />
+    <Compile Include="Plugins\PopupPlugin.cs" />
     <Compile Include="Window\ConfigWindow.xaml.cs">
       <DependentUpon>ConfigWindow.xaml</DependentUpon>
     </Compile>

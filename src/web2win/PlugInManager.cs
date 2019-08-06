@@ -146,6 +146,10 @@ namespace web2win
                 var events = new List<Action<PluginEventArgs>>();
                 foreach (var plugin in _plugins)
                 {
+                    if (!plugin.Enabled)
+                    {
+                        continue;
+                    }
                     var action = plugin.GetType().GetMethod(methodName, argtypes)?.CreateDelegate(typeof(Action<PluginEventArgs>), plugin);
                     if (action != null)
                     {
