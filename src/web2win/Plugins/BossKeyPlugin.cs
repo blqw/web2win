@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Interop;
 using CefSharp.Wpf;
+using MessageBox = System.Windows.MessageBox;
 
 namespace web2win.Plugins
 {
@@ -97,14 +98,14 @@ namespace web2win.Plugins
 
         public override void OnWindowLoad(Window window, ChromiumWebBrowser browser)
         {
-            window.Dispatcher?.Invoke(() =>
+            var b = window.Dispatcher?.Invoke(() =>
             {
                 var hwnd = new WindowInteropHelper(window).Handle;
                 var id = 0x1234;
                 if (!HotKey.RegKey(hwnd, id, Modifiers, Key))
                 {
                     Console.WriteLine(new Exception("快捷键注册失败"));
-                    return;
+                    return false;
                 }
                 var source = PresentationSource.FromVisual(window) as HwndSource;
                 source.AddHook(WndProc);
@@ -114,7 +115,13 @@ namespace web2win.Plugins
                     HotKey.UnRegKey(hwnd, id);
                     source.RemoveHook(WndProc);
                 };
+                return true;
             });
+
+            if (b != true)
+            {
+                MessageBox.Show("快捷键注册失败");
+            }
         }
 
         /// <summary>

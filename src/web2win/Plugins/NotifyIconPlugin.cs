@@ -4,12 +4,12 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using CefSharp.Wpf;
+using Color = System.Windows.Media.Color;
 
 namespace web2win.Plugins
 {
@@ -84,7 +84,7 @@ namespace web2win.Plugins
         {
             using (var ms = new System.IO.MemoryStream())
             {
-                var encoder = new BmpBitmapEncoder();
+                var encoder = new PngBitmapEncoder();
                 encoder.Frames.Add(BitmapFrame.Create((BitmapSource)source));
                 encoder.Save(ms);
                 using (var bitmap = new Bitmap(ms))

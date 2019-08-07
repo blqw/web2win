@@ -60,6 +60,15 @@ namespace web2win.Plugins
                             }
                         }
                     };
+
+                    if (browser.IsLoaded)
+                    {
+                        var res = browser.EvaluateScriptAsync("(function(){return (document.querySelector(\"link[rel = 'shortcut icon']\") || document.querySelector(\"link[rel = 'icon']\") || {}).href;})()").Result;
+                        if (res.Success && res.Result is string s && !string.IsNullOrWhiteSpace(s))
+                        {
+                            window.Dispatcher?.Invoke(() => window.Icon = new BitmapImage(new Uri(s)));
+                        }
+                    }
                 }
 
                 if (config.Title == null)
