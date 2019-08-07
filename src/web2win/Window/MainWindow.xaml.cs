@@ -15,6 +15,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Shell;
 
 namespace web2win
 {
@@ -78,6 +79,28 @@ namespace web2win
             if (e.ClickCount == 2)
             {
                 this.Close();
+            }
+        }
+
+        protected override void AddChild(object value)
+        {
+            if (value is Button btn)
+            {
+                btn.Style = btnConsole.Style;
+                if (btn.Content is string s)
+                {
+                    btn.Content = null;
+                    var lbl = new Label() { Content = s };
+                    lbl.SetBinding(Label.ForegroundProperty, new Binding("Foreground") { Source = btn });
+                    btn.Content = lbl;
+                }
+                //btn.chr
+                WindowChrome.SetIsHitTestVisibleInChrome(btn, true);
+                panelButtonBar.Children.Add(btn);
+            }
+            else
+            {
+                base.AddChild(value);
             }
         }
     }

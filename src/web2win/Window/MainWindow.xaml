@@ -10,8 +10,9 @@
 
     <Window.Resources>
         <Style x:Key="BtnInfoStyle" TargetType="Button">
-            <Setter Property="Width" Value="45"/>
-            <Setter Property="Height" Value="29"/>
+            <!--<Setter Property="Width" Value="45"/>-->
+            <Setter Property="Height" Value="30"/>
+            <Setter Property="Padding" Value="15,15,15,15"/>
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="Background" Value="Transparent"/>
@@ -41,10 +42,15 @@
         <!--<Button Content="调试" Name="btnDevTools" Panel.ZIndex="10000" HorizontalAlignment="Right" VerticalAlignment="Top" 
                 Margin="0 -30 200 0" Width="50" Height="30" Click="ShowDevTools"  WindowChrome.IsHitTestVisibleInChrome="True"
                 Style="{StaticResource BtnInfoStyle}" />-->
-        <Button Content="控制台" Name="btnConsole" Panel.ZIndex="10000" HorizontalAlignment="Right" VerticalAlignment="Top" 
-                Margin="0 -30 150 0" Width="50" Height="30" Click="ShowConsole"  WindowChrome.IsHitTestVisibleInChrome="True"
-                Style="{StaticResource BtnInfoStyle}" />
 
+        <StackPanel Name="panelButtonBar" Panel.ZIndex="10000" HorizontalAlignment="Stretch" VerticalAlignment="Top" 
+                Margin="150 -30 150 0" Height="30" Orientation="Horizontal" FlowDirection="RightToLeft" >
+            <Button Name="btnConsole" Panel.ZIndex="10000" HorizontalAlignment="Right" VerticalAlignment="Top" 
+                 Height="30" Click="ShowConsole"  WindowChrome.IsHitTestVisibleInChrome="True"
+                Style="{StaticResource BtnInfoStyle}" >
+                <Label Foreground="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type Button},AncestorLevel=1},Path=Foreground }" >控制台</Label>
+            </Button>
+        </StackPanel>
 
         <Grid Name="main" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.ColumnSpan="2"  >
         </Grid>

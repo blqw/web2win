@@ -123,6 +123,10 @@
     <Compile Include="Config.cs" />
     <Compile Include="Plugins\Argument\PluginEventArgs.cs" />
     <Compile Include="Plugins\PopupPlugin.cs" />
+    <Compile Include="Update\FieldMappingAttribute.cs" />
+    <Compile Include="Update\UpdateRelease.cs" />
+    <Compile Include="Update\UpdateManager.cs" />
+    <Compile Include="Update\UpdatePlugin.cs" />
     <Compile Include="Window\ConfigWindow.xaml.cs">
       <DependentUpon>ConfigWindow.xaml</DependentUpon>
     </Compile>
@@ -236,8 +240,6 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Update\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
