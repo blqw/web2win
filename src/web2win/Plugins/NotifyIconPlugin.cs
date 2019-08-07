@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -24,44 +25,43 @@ namespace web2win.Plugins
 
         public override void OnWindowLoad(Window window, ChromiumWebBrowser browser)
         {
-            browser.FrameLoadEnd += Browser_FrameLoadEnd;
-        }
-
-
-
-        private void Browser_FrameLoadEnd(object sender, CefSharp.FrameLoadEndEventArgs e)
-        {
-            var browser = (ChromiumWebBrowser)sender;
-            browser.FrameLoadEnd -= Browser_FrameLoadEnd;
             browser.Dispatcher?.Invoke(() =>
             {
-                var window = Window.GetWindow(browser);
-                var notify = new NotifyIcon
+                var notify = new NotifyIcon { Text = window.Title };
+                if (window.Icon != null)
                 {
-                    Text = window.Title,
-                    Icon = ToIcon(window.Icon)
-                };
-
+                    notify.Icon = ToIcon(window.Icon);
+                }
                 window.Closing += (_, x) => notify.Dispose();
-
                 notify.ContextMenu = CreateMenu("打开", "退出");
                 notify.ContextMenu.MenuItems[0].Click += (_, x) => window.Visibility = Visibility.Visible;
                 notify.ContextMenu.MenuItems[1].Click += (_, x) => window.Close();
                 notify.DoubleClick += (_, x) => Toggle(window);
-
                 notify.Visible = true;
-
                 if (MinimizeToTray)
                 {
                     window.StateChanged += (_, x) =>
                     {
                         if (window.WindowState == WindowState.Minimized)
                         {
+                            window.WindowState = WindowState.Normal;
                             window.Hide();
                         }
                     };
                 }
+                var dpd = DependencyPropertyDescriptor.FromProperty(Window.IconProperty, typeof(Window));
+                if (dpd != null)
+                {
+                    dpd.AddValueChanged(window, delegate
+                    {
+                        if (window.Icon != null)
+                        {
+                            notify.Icon = ToIcon(window.Icon);
+                        }
+                    });
+                }
             });
+
         }
 
         private ContextMenu CreateMenu(params string[] texts)

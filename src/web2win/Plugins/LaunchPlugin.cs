@@ -48,7 +48,18 @@ namespace web2win.Plugins
 
                 if (window.Icon == null)
                 {
-                    window.Icon = new BitmapImage(new Uri(new Uri(config.Url), "/favicon.ico"));
+                    //window.Icon = new BitmapImage(new Uri(new Uri(config.Url), "/favicon.ico"));
+                    browser.FrameLoadEnd += async (_, x) =>
+                    {
+                        if (x.Frame.IsMain)
+                        {
+                            var res = await x.Frame.EvaluateScriptAsync("(function(){return (document.querySelector(\"link[rel = 'shortcut icon']\") || document.querySelector(\"link[rel = 'icon']\") || {}).href;})()");
+                            if (res.Success && res.Result is string s && !string.IsNullOrWhiteSpace(s))
+                            {
+                                window.Dispatcher?.Invoke(() => window.Icon = new BitmapImage(new Uri("http://code.fastfish.com:5000/html/web/resource/pic/logo.ico")));
+                            }
+                        }
+                    };
                 }
 
                 if (config.Title == null)
@@ -62,7 +73,7 @@ namespace web2win.Plugins
             var visitor = new CookieVisitor();
             visitor.Callback(value =>
             {
-                var array = value.Split(',').Select(int.Parse).ToArray();
+                var array = value.Split(',').Select(double.Parse).ToArray();
                 window.Dispatcher?.Invoke(() =>
                 {
                     window.Left = array[0];
