@@ -56,7 +56,7 @@ namespace web2win.Plugins
                             var res = await x.Frame.EvaluateScriptAsync("(function(){return (document.querySelector(\"link[rel = 'shortcut icon']\") || document.querySelector(\"link[rel = 'icon']\") || {}).href;})()");
                             if (res.Success && res.Result is string s && !string.IsNullOrWhiteSpace(s))
                             {
-                                window.Dispatcher?.Invoke(() => window.Icon = new BitmapImage(new Uri("http://code.fastfish.com:5000/html/web/resource/pic/logo.ico")));
+                                window.Dispatcher?.Invoke(() => window.Icon = new BitmapImage(new Uri(s)));
                             }
                         }
                     };
