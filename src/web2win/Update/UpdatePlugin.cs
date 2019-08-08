@@ -39,7 +39,7 @@ namespace web2win.Update
         public void Configure(UpdateRelease[] releases)
         {
             UpdateManager.Configure(releases);
-            _window.Dispatcher?.Invoke(() =>
+            _window.Invoke(() =>
             {
                 var btn = new Button() { Content = "有新版本" };
                 btn.Click += delegate { MessageBox.Show("开始更新"); };
@@ -58,7 +58,7 @@ namespace web2win.Update
                     web.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", "blqw.web2win/1.0");
                     var json = await web.GetStringAsync("https://api.github.com/repos/blqw/web2win/releases");
                     Console.WriteLine("更新描述: " + json);
-                    _browser?.Dispatcher?.Invoke(() => _browser.ExecuteScriptAsyncWhenPageLoaded($@"CefSharp.BindObjectAsync('updater','configure').then(()=>updater.configure({json}));"));
+                    _browser.Invoke(() => _browser.ExecuteScriptAsyncWhenPageLoaded($@"CefSharp.BindObjectAsync('updater','configure').then(()=>updater.configure({json}));"));
                 }
             }
             catch (Exception ex)

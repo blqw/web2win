@@ -25,7 +25,7 @@ namespace web2win.Plugins
 
         public override void OnWindowLoad(Window window, ChromiumWebBrowser browser)
         {
-            browser.Dispatcher?.Invoke(() =>
+            browser.Invoke(() =>
             {
                 var notify = new NotifyIcon { Text = window.Title };
                 if (window.Icon != null)

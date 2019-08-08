@@ -19,7 +19,7 @@ namespace web2win.Plugins
             {
                 if (e.Key == Key.F12)
                 {
-                    browser.Dispatcher?.Invoke(() => browser.ShowDevTools());
+                    browser.Invoke(() => browser.ShowDevTools());
                     e.Handled = true;
                 }
             };

@@ -39,7 +39,7 @@ namespace web2win
                         }
                         var line = txt.Count(c => c == '\n') + (txt.EndsWith("\n") ? 0 : 1);
                         var maxLine = 20;
-                        Dispatcher?.Invoke(() =>
+                        this.Invoke(() =>
                         {
                             var lineCount = showlogs.LineCount + (showlogs.Text.EndsWith("\n") ? -1 : 0);
                             var overflow = lineCount + line - maxLine;

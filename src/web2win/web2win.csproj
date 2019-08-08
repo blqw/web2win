@@ -123,6 +123,7 @@
     <Compile Include="Config.cs" />
     <Compile Include="Plugins\Argument\PluginEventArgs.cs" />
     <Compile Include="Plugins\PopupPlugin.cs" />
+    <Compile Include="Tools\DispatcherExtensions.cs" />
     <Compile Include="Update\FieldMappingAttribute.cs" />
     <Compile Include="Update\UpdateRelease.cs" />
     <Compile Include="Update\UpdateManager.cs" />

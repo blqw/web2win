@@ -21,7 +21,7 @@ namespace web2win.Plugins
             var screeWidth = SystemParameters.FullPrimaryScreenWidth;
             var config = Config;
 
-            window.Dispatcher?.Invoke(() =>
+            window.Invoke(() =>
             {
                 window.Title = config.Title ?? "web2win";
                 window.WindowStyle = WindowStyle.SingleBorderWindow;
@@ -83,7 +83,7 @@ namespace web2win.Plugins
             visitor.Callback(value =>
             {
                 var array = value.Split(',').Select(double.Parse).ToArray();
-                window.Dispatcher?.Invoke(() =>
+                window.Invoke(() =>
                 {
                     window.Left = array[0];
                     window.Top = array[1];
