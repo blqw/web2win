@@ -19,7 +19,7 @@ namespace web2win
                 }
                 else
                 {
-                    dispatcher.Invoke(action);
+                    dispatcher.Dispatcher.Invoke(action);
                 }
             }
             catch (TaskCanceledException ex)

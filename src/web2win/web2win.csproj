@@ -121,10 +121,12 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Config.cs" />
+    <Compile Include="DisabledMenu.cs" />
     <Compile Include="Plugins\Argument\PluginEventArgs.cs" />
     <Compile Include="Plugins\PopupPlugin.cs" />
     <Compile Include="Tools\DispatcherExtensions.cs" />
     <Compile Include="Update\FieldMappingAttribute.cs" />
+    <Compile Include="Update\Markdown.cs" />
     <Compile Include="Update\UpdateRelease.cs" />
     <Compile Include="Update\UpdateManager.cs" />
     <Compile Include="Update\UpdatePlugin.cs" />
@@ -184,20 +186,11 @@
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
     <None Include="default.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

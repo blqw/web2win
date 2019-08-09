@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -42,30 +43,38 @@ namespace web2win.Update
             _window.Invoke(() =>
             {
                 var btn = new Button() { Content = "有新版本" };
-                btn.Click += delegate { MessageBox.Show("开始更新"); };
+                btn.Click += delegate { UpdateManager.ShowWindow(_window); };
                 ((IAddChild)_window).AddChild(btn);
             });
         }
 
-        private async Task GetUpdateInfo()
+        private async Task GetUpdateInfo(int times = 1)
         {
             try
             {
-                Console.WriteLine("正在检查更新...");
+                Console.WriteLine((times == 1 ? "正在" : "第" + times + "次尝试") + "检查更新...");
                 using (var web = new HttpClient())
                 {
                     System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12; //加上这一句
                     web.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", "blqw.web2win/1.0");
-                    var json = await web.GetStringAsync("https://api.github.com/repos/blqw/web2win/releases");
+                    var source = new CancellationTokenSource(15000);
+                    var res = await web.GetAsync("https://api.github.com/repos/blqw/init/releases", source.Token);
+                    var json = await res.Content.ReadAsStringAsync();
                     Console.WriteLine("更新描述: " + json);
                     _browser.Invoke(() => _browser.ExecuteScriptAsyncWhenPageLoaded($@"CefSharp.BindObjectAsync('updater','configure').then(()=>updater.configure({json}));"));
                 }
+                return;
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
-                MessageBox.Show("自动更新检查失败:" + ex.Message);
+                if (times >= 3)
+                {
+                    MessageBox.Show("自动更新检查失败:" + ex.Message);
+                    return;
+                }
             }
+            GetUpdateInfo(times + 1).ConfigureAwait(false);
         }
     }
 }

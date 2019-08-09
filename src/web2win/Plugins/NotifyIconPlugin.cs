@@ -32,15 +32,15 @@ namespace web2win.Plugins
                 {
                     notify.Icon = ToIcon(window.Icon);
                 }
-                window.Closing += (_, x) => notify.Dispose();
+                window.Closing += delegate { notify.Dispose(); };
                 notify.ContextMenu = CreateMenu("打开", "退出");
-                notify.ContextMenu.MenuItems[0].Click += (_, x) => window.Visibility = Visibility.Visible;
-                notify.ContextMenu.MenuItems[1].Click += (_, x) => window.Close();
-                notify.DoubleClick += (_, x) => Toggle(window);
+                notify.ContextMenu.MenuItems[0].Click += delegate { window.Visibility = Visibility.Visible; };
+                notify.ContextMenu.MenuItems[1].Click += delegate { window.Close(); };
+                notify.DoubleClick += delegate { Toggle(window); };
                 notify.Visible = true;
                 if (MinimizeToTray)
                 {
-                    window.StateChanged += (_, x) =>
+                    window.StateChanged += delegate
                     {
                         if (window.WindowState == WindowState.Minimized)
                         {
